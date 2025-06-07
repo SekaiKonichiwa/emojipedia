@@ -1,13 +1,12 @@
-stage('Checkout Code') {
-  steps {
-    checkout scm
-  }
-}
-
 pipeline {
   agent any
 
   stages {
+    stage('Checkout Code') {
+      steps {
+        checkout scm
+      }
+    }
     stage('Install Dependencies') {
       steps {
         sh 'npm install'
