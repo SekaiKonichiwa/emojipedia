@@ -12,15 +12,24 @@ pipeline {
       agent {
         docker {
           image 'node:18'
-          args '-u root'  // run as root user inside container to avoid permission issues
+          args '-u root'  // run as root inside container
         }
       }
       steps {
         sh 'npm install'
         sh 'npm run build'
-        // archive build folder to use outside container
         sh 'cp -r dist ../dist_for_deploy'
       }
     }
 
-    stage('Deploy
+    stage('Deploy Build') {
+      steps {
+        // Use double quotes here to allow multiline shell
+        sh """
+          rm -rf /var/www/html/*
+          cp -r dist_for_deploy/* /var/www/html/
+        """
+      }
+    }
+  }
+}
