@@ -1,3 +1,9 @@
+stage('Checkout Code') {
+  steps {
+    checkout scm
+  }
+}
+
 pipeline {
   agent any
 
