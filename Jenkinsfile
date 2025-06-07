@@ -18,13 +18,12 @@ pipeline {
       steps {
         sh 'npm install'
         sh 'npm run build'
-        sh 'cp -r dist ../dist_for_deploy'
+        sh 'cp -r dist dist_for_deploy'  // copy inside workspace
       }
     }
 
     stage('Deploy Build') {
       steps {
-        // Use double quotes here to allow multiline shell
         sh """
           rm -rf /var/www/html/*
           cp -r dist_for_deploy/* /var/www/html/
