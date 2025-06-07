@@ -1,9 +1,5 @@
 pipeline {
-  agent {
-    docker {
-      image 'node:18'  // Official Node.js image
-    }
-  }
+  agent any
 
   stages {
     stage('Checkout Code') {
@@ -12,23 +8,19 @@ pipeline {
       }
     }
 
-    stage('Install Dependencies') {
+    stage('Build React App') {
+      agent {
+        docker {
+          image 'node:18'
+          args '-u root'  // run as root user inside container to avoid permission issues
+        }
+      }
       steps {
         sh 'npm install'
-      }
-    }
-
-    stage('Build React App') {
-      steps {
         sh 'npm run build'
+        // archive build folder to use outside container
+        sh 'cp -r dist ../dist_for_deploy'
       }
     }
 
-    stage('Deploy Build') {
-      steps {
-        sh 'rm -rf /var/www/html/*'
-        sh 'cp -r dist/* /var/www/html/'
-      }
-    }
-  }
-}
+    stage('Deploy
