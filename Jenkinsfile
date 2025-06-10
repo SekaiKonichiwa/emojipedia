@@ -23,12 +23,20 @@ pipeline {
     }
 
     stage('Deploy Build') {
-      steps {
-        sh """
-          rm -rf /var/www/html/*
-          cp -r dist_for_deploy/* /var/www/html/
-        """
-      }
+  agent {
+    docker {
+      image 'node:18'
+      args '-u root'
     }
+  }
+  steps {
+    sh """
+      ls -la dist_for_deploy || echo 'dist_for_deploy missing!'
+      rm -rf /var/www/html/*
+      cp -r dist_for_deploy/* /var/www/html/
+    """
+  }
+}
+
   }
 }
