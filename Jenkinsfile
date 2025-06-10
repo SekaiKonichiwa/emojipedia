@@ -22,21 +22,21 @@ pipeline {
       }
     }
 
-    stage('Deploy Build') {
+  stage('Deploy Build') {
   agent {
     docker {
       image 'node:18'
-      args '-u root'
+      args '-v /home/dache/jenkins-react-deploy:/usr/share/nginx/html -u root'
     }
   }
   steps {
     sh """
-      ls -la dist_for_deploy || echo 'dist_for_deploy missing!'
-      rm -rf /var/www/html/*
-      cp -r dist_for_deploy/* /var/www/html/
+      rm -rf /usr/share/nginx/html/*
+      cp -r dist_for_deploy/* /usr/share/nginx/html/
     """
   }
 }
+
 
   }
 }
